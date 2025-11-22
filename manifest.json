@@ -2,7 +2,7 @@
     "name": "Pegasus Fitness",
     "short_name": "Pegasus",
     "description": "AI-powered fitness and climbing tracker",
-    "start_url": "/",
+    "start_url": "/pegasus/#/",
     "display": "standalone",
     "background_color": "#000000",
     "theme_color": "#FF5500",
