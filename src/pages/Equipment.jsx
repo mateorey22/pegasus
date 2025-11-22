@@ -49,19 +49,38 @@ export function Equipment() {
             className="container"
             style={{ paddingTop: '2rem' }}
         >
+            {/* Header with Image */}
             <div style={{
-                background: 'url(/bg-equipment.png) no-repeat center center',
-                backgroundSize: 'cover',
-                borderRadius: '20px',
-                padding: '3rem 2rem',
-                marginBottom: '2rem',
                 position: 'relative',
-                overflow: 'hidden'
+                height: '200px',
+                borderRadius: '24px',
+                overflow: 'hidden',
+                marginBottom: '2rem',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
             }}>
-                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)' }}></div>
-                <div style={{ position: 'relative', zIndex: 1 }}>
-                    <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Equipment Library</h1>
-                    <p style={{ color: 'rgba(255,255,255,0.8)' }}>Manage your home gym inventory.</p>
+                <img
+                    src="/pegasus/img/equipment.png"
+                    alt="Equipment"
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        filter: 'brightness(0.6)'
+                    }}
+                    onError={(e) => e.target.src = '/img/equipment.png'}
+                />
+                <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                    padding: '2rem',
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)'
+                }}>
+                    <h1 style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: 0, fontSize: '2.5rem', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+                        <Dumbbell className="text-primary" size={32} /> Equipment
+                    </h1>
+                    <p style={{ color: 'rgba(255,255,255,0.9)', margin: '5px 0 0 0', fontSize: '1.1rem' }}>Manage your home gym inventory.</p>
                 </div>
             </div>
 

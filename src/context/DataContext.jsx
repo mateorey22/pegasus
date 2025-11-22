@@ -49,10 +49,23 @@ export function DataProvider({ children }) {
     }, [data]);
 
     const updateSection = (section, payload) => {
-        setData(prev => ({
-            ...prev,
-            [section]: { ...prev[section], ...payload }
-        }));
+        setData(prev => {
+            const prevValue = prev[section];
+
+            // If both are objects and not arrays/null, merge them
+            if (
+                typeof prevValue === 'object' && prevValue !== null && !Array.isArray(prevValue) &&
+                typeof payload === 'object' && payload !== null && !Array.isArray(payload)
+            ) {
+                return {
+                    ...prev,
+                    [section]: { ...prevValue, ...payload }
+                };
+            }
+
+            // Otherwise, replace the value (for arrays, primitives, etc.)
+            return { ...prev, [section]: payload };
+        });
     };
 
     const addLog = (type, entry) => {

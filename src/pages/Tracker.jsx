@@ -4,7 +4,7 @@ import { useData } from '../context/DataContext';
 import { geminiService } from '../services/gemini';
 import { notificationService } from '../services/notifications';
 import { motion } from 'framer-motion';
-import { Play, Pause, RotateCcw, Camera, Check, X, Droplets, Dumbbell, Utensils, Timer, Moon, Zap } from 'lucide-react';
+import { Play, Pause, RotateCcw, Camera, Check, X, Droplets, Dumbbell, Utensils, Timer, Moon, Zap, Activity } from 'lucide-react';
 
 export function Tracker() {
     const { data, addLog, updateSection } = useData();
@@ -134,6 +134,40 @@ export function Tracker() {
             className="container"
             style={{ paddingTop: '2rem' }}
         >
+            {/* Header with Image */}
+            <div style={{
+                position: 'relative',
+                height: '200px',
+                borderRadius: '24px',
+                overflow: 'hidden',
+                marginBottom: '2rem',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+            }}>
+                <img
+                    src="/pegasus/img/tracker.png"
+                    alt="Tracker"
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        filter: 'brightness(0.6)'
+                    }}
+                    onError={(e) => e.target.src = '/img/tracker.png'}
+                />
+                <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                    padding: '2rem',
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)'
+                }}>
+                    <h1 style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: 0, fontSize: '2.5rem', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+                        <Activity className="text-primary" size={32} /> Tracker
+                    </h1>
+                </div>
+            </div>
+
             {/* ... tabs ... */}
             <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', overflowX: 'auto', paddingBottom: '5px' }}>
                 {tabs.map(tab => (

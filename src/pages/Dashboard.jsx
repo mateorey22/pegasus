@@ -4,7 +4,7 @@ import { useData } from '../context/DataContext';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { geminiService } from '../services/gemini';
 import { motion } from 'framer-motion';
-import { Activity, Droplets, Flame, Brain, ChevronRight, Calendar } from 'lucide-react';
+import { Activity, Droplets, Flame, Brain, ChevronRight, Calendar, Moon, Zap } from 'lucide-react';
 
 export function Dashboard() {
     const { data } = useData();
@@ -13,6 +13,19 @@ export function Dashboard() {
 
     const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
     const todaySchedule = data.schedule?.days?.find(d => d.day === today);
+
+    const lastSleep = data.logs.sleep?.slice(-1)[0];
+    const currentEnergy = data.logs.energy?.slice(-1)[0];
+
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
 
     const todayWater = data.logs.water
         .filter(l => l.timestamp.startsWith(new Date().toISOString().split('T')[0]))
@@ -61,41 +74,80 @@ export function Dashboard() {
         generateHints();
     }, [data.settings.apiKey]);
 
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 }
+    };
+
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
             exit={{ opacity: 0, y: -20 }}
             className="container"
-            style={{ paddingTop: '2rem' }}
+            style={{ paddingBottom: '6rem' }}
         >
-            <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <div>
-                    <h1 style={{ fontSize: '1.8rem', fontWeight: '800', letterSpacing: '-1px' }}>
+            {/* Hero Section */}
+            <motion.div
+                variants={itemVariants}
+                style={{
+                    position: 'relative',
+                    height: '250px',
+                    borderRadius: '24px',
+                    overflow: 'hidden',
+                    marginBottom: '2rem',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+                }}
+            >
+                <img
+                    src="/pegasus/img/dashboard.png"
+                    alt="Dashboard Hero"
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        filter: 'brightness(0.7)'
+                    }}
+                    onError={(e) => e.target.src = '/img/dashboard.png'} // Fallback for local dev
+                />
+                <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                    padding: '2rem',
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)'
+                }}>
+                    <h1 style={{ fontSize: '2.5rem', fontWeight: '800', letterSpacing: '-1px', marginBottom: '5px', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
                         Hello, <span className="text-primary">{data.user.name || 'Athlete'}</span>
                     </h1>
-                    <p style={{ color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <Calendar size={14} /> {today} • {data.user.climbingGrade}
+                    <p style={{ color: 'rgba(255,255,255,0.9)', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem' }}>
+                        <Calendar size={16} /> {today} <span style={{ opacity: 0.5 }}>|</span> {data.user.climbingGrade}
                     </p>
                 </div>
                 <div style={{
-                    width: '45px',
-                    height: '45px',
-                    borderRadius: '12px',
-                    background: 'linear-gradient(135deg, var(--color-primary), #ff8800)',
+                    position: 'absolute',
+                    top: '20px',
+                    right: '20px',
+                    width: '50px',
+                    height: '50px',
+                    borderRadius: '50%',
+                    background: 'rgba(255, 85, 0, 0.9)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontWeight: 'bold',
-                    fontSize: '1.2rem',
-                    boxShadow: '0 4px 15px rgba(255, 85, 0, 0.3)'
+                    fontSize: '1.5rem',
+                    boxShadow: '0 4px 15px rgba(255, 85, 0, 0.4)',
+                    border: '2px solid rgba(255,255,255,0.2)'
                 }}>
                     {data.user.name ? data.user.name[0].toUpperCase() : 'U'}
                 </div>
-            </header>
+            </motion.div>
 
             {/* AI Coach Hints */}
-            <section style={{ marginBottom: '2rem' }}>
+            <motion.section variants={itemVariants} style={{ marginBottom: '2rem' }}>
                 <div className="glass-panel" style={{ padding: '1.5rem', background: 'linear-gradient(135deg, rgba(255,85,0,0.15), rgba(0,0,0,0.2))', border: '1px solid rgba(255,85,0,0.2)' }}>
                     <h2 style={{ fontSize: '1.1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--color-primary)' }}>
                         <Brain size={20} /> AI Coach Insights
@@ -110,9 +162,10 @@ export function Dashboard() {
                         </ul>
                     )}
                 </div>
-            </section>
+            </motion.section>
 
-            <section style={{ marginBottom: '2rem' }}>
+            {/* Today's Plan */}
+            <motion.section variants={itemVariants} style={{ marginBottom: '2rem' }}>
                 <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Today's Plan</h2>
                 {todaySchedule ? (
                     <div className="glass-panel" style={{ padding: '1.5rem', position: 'relative', overflow: 'hidden' }}>
@@ -135,7 +188,8 @@ export function Dashboard() {
                                 padding: '12px',
                                 borderRadius: '12px',
                                 fontWeight: 'bold',
-                                width: '100%'
+                                width: '100%',
+                                transition: 'transform 0.2s'
                             }}>
                                 Start Workout <ChevronRight size={18} />
                             </Link>
@@ -147,9 +201,43 @@ export function Dashboard() {
                         <Link to="/planner" style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>Go to Planner</Link>
                     </div>
                 )}
-            </section>
+            </motion.section>
 
-            <section style={{ marginBottom: '2rem' }}>
+            {/* Wellness Section */}
+            <motion.section variants={itemVariants} style={{ marginBottom: '2rem' }}>
+                <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Wellness & Recovery</h2>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', color: '#a855f7' }}>
+                            <Moon size={20} /> <span style={{ fontWeight: 'bold' }}>Sleep</span>
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+                                {lastSleep ? `${lastSleep.duration}h` : '--'}
+                            </div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+                                {lastSleep ? `Quality: ${lastSleep.quality}/10` : 'No data'}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', color: '#eab308' }}>
+                            <Zap size={20} /> <span style={{ fontWeight: 'bold' }}>Energy</span>
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+                                {currentEnergy ? `${currentEnergy.level}/10` : '--'}
+                            </div>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+                                {currentEnergy ? new Date(currentEnergy.timestamp || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'No data'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </motion.section>
+
+            {/* Performance Section */}
+            <motion.section variants={itemVariants} style={{ marginBottom: '2rem' }}>
                 <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Performance</h2>
                 <div className="glass-panel" style={{ padding: '1.5rem', height: '300px', display: 'flex', flexDirection: 'column' }}>
                     <h3 style={{ fontSize: '0.9rem', marginBottom: '1rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Weekly Volume</h3>
@@ -167,9 +255,10 @@ export function Dashboard() {
                         </ResponsiveContainer>
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
-            <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            {/* Nutrition & Hydration */}
+            <motion.section variants={itemVariants} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="glass-panel" style={{ padding: '1.5rem' }}>
                     <h3 style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
                         <Droplets size={16} color="#0096FF" /> Hydration
@@ -199,7 +288,7 @@ export function Dashboard() {
                         />
                     </div>
                 </div>
-            </section>
+            </motion.section>
         </motion.div>
     );
 }

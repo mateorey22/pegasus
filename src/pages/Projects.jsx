@@ -85,26 +85,60 @@ export function Projects() {
         >
             {view === 'grid' && (
                 <>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                        <h2>Climbing Projects</h2>
-                        <button
-                            onClick={() => setView('new')}
+                    {/* Header with Image */}
+                    <div style={{
+                        position: 'relative',
+                        height: '200px',
+                        borderRadius: '24px',
+                        overflow: 'hidden',
+                        marginBottom: '2rem',
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+                    }}>
+                        <img
+                            src="/pegasus/img/projects.png"
+                            alt="Projects"
                             style={{
-                                background: 'var(--color-primary)',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '50%',
-                                width: '50px',
-                                height: '50px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'pointer',
-                                boxShadow: '0 4px 15px rgba(255, 85, 0, 0.4)'
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                filter: 'brightness(0.6)'
                             }}
-                        >
-                            <Plus size={24} />
-                        </button>
+                            onError={(e) => e.target.src = '/img/projects.png'}
+                        />
+                        <div style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            width: '100%',
+                            padding: '2rem',
+                            background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'flex-end'
+                        }}>
+                            <h1 style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: 0, fontSize: '2.5rem', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+                                <Mountain className="text-primary" size={32} /> Projects
+                            </h1>
+
+                            <button
+                                onClick={() => setView('new')}
+                                style={{
+                                    background: 'var(--color-primary)',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '50%',
+                                    width: '50px',
+                                    height: '50px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 4px 15px rgba(255, 85, 0, 0.4)'
+                                }}
+                            >
+                                <Plus size={24} />
+                            </button>
+                        </div>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
